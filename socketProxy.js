@@ -32,41 +32,52 @@ io.configure(function(){
     });
 });
 
-
 io.sockets.on('connection', function (socket) {
 
-    socket.on('message',function(data){
+   socket.on('message',function(data){
         handleClientMessage(data,socket);
     });
 
 });
 
 function handleClientMessage(rawData,socket){
+
     //var sessionid = socket.socket.sessionid;
     //console.dir(socket);
 
-    console.log('rawData '+rawData);
-    console.log('sid '+socket.id);
+    //console.log('rawData '+rawData);
+    //console.log('sid '+socket.id);
 
-    var data = JSON.parse(rawData);
-    if(data){
-        if(data.method == "subscribe"){
-            createUserSubscription(data,socket);
+    var data = null;
+    try{
+        data = JSON.parse(rawData);
+    }catch(e){};
+
+    if(data!=null){
+        if(data.method == "register_session"){
+            registerSession(data,socket);
         }
-
     }
+
+
 }
 
-function createUserSubscription(data,socket){
+function registerSession(data,socket){
     parseApp.subscribeUser(
       data.user,
       data.subscription_token,
       socket.id,
       function(subscribed){
 
+          //data.subscribed = subscribed;
+
           data.subscribed = subscribed;
-          var m = "SUBSCRIPTION:"+(subscribed?"SUCCESS":"FAILED");
-          socket.emit("message",m);
+
+          // no need to stringify data, socket handler parses it in unity
+
+          //socket.emit("message",JSON.stringify(data));
+          socket.emit("message",data);
+
 
       }
     );
@@ -78,16 +89,36 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/public/index.html');
 });
 
-app.post('/send',function(req,res){
+app.post('/send/:sessionId',function(req,res){
 
-    console.log("sending...");
 
-    //socket.emit('message', "this is a test");
+    var data = req.body;
 
-    req.socket.emit('message','test');
+    console.dir(data);
 
-    //console.dir(req);
-    res.send('OK');
+    var m = {
+        method:"check_in_received",
+        message:"dgsfdhj"
+    };
+
+    var socket = null;
+    var sessionId = req.params.sessionId;
+
+    try{
+        socket = io.sockets.socket(sessionId);
+    }catch(e){};
+
+    if(socket){
+        console.log("sending message...");
+        socket.emit('message',m);
+
+        res.send({sent:true});
+
+    }else{
+        res.send({sent:false,error:"invalid socket session id"});
+    }
+
+
 });
 
 
