@@ -43,8 +43,6 @@ io.sockets.on('connection', function (socket) {
 function handleClientMessage(rawData,socket){
 
     //var sessionid = socket.socket.sessionid;
-    //console.dir(socket);
-
     //console.log('rawData '+rawData);
     //console.log('sid '+socket.id);
 
@@ -63,8 +61,9 @@ function handleClientMessage(rawData,socket){
 }
 
 function registerSession(data,socket){
+
     parseApp.subscribeUser(
-      data.user,
+      data.user_id,
       data.subscription_token,
       socket.id,
       function(subscribed){

@@ -1,9 +1,10 @@
 var parseConfig = require('./config').parse;
 var parseApp = exports;
+parseApp.parseConfig = parseConfig;
 var http = require('http');
 
 parseApp.authorizeConnection = function(subscription_token,callback){
-    console.log(parseConfig.app);
+    console.log(this.parseConfig.app);
     callback(null,true);
 };
 
@@ -23,12 +24,14 @@ parseApp.subscribeUser = function(user_id,subscription_token,socket_session_id,c
     };
 
     var options = {
-        host:parseConfig.appName+".parseapp.com",
-        path:"/"+parseApp.subscribeSessionEndpoint,
+        host:this.parseConfig.appName+".parseapp.com",
+        path:"/"+this.parseConfig.subscribeSessionEndpoint,
         port: 80,
         method:'POST',
         headers:headers
     };
+
+    console.log("options.path ",options.path);
 
     var req = http.request(options,function(res){
         res.setEncoding('utf-8');
