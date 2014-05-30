@@ -1,13 +1,13 @@
 var config = require('./config');
 //var static = require('node-static');
 var express = require('express');
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
 var http = require('http');
 var parseApp = require('./parseApp');
 
 var app = express();
 //app.use(express.json());
-app.use(bodyParser());
+app.use(express.bodyParser());
 //app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 //app.use('/', express.static(__dirname + '/public'));
 var server = http.createServer(app).listen(config.port);
