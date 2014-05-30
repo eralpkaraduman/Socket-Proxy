@@ -106,11 +106,9 @@ app.post('/send/:sessionId',function(req,res){
         return;
     }
 
+    data.method = "check_in_received";
 
-    var m = {
-        method:"check_in_received",
-        message:data
-    };
+
 
     var socket = null;
     var sessionId = req.params.sessionId;
@@ -123,7 +121,7 @@ app.post('/send/:sessionId',function(req,res){
 
     if(socket){
         console.log("sending message...");
-        socket.emit('message',m);
+        socket.emit('message',data);
 
         res.send({sent:true});
 
