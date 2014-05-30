@@ -1,13 +1,13 @@
 var config = require('./config');
 //var static = require('node-static');
 var express = require('express');
-//var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 var http = require('http');
 var parseApp = require('./parseApp');
 
 var app = express();
-app.use(express.json());
-//app.use(bodyParser());
+//app.use(express.json());
+app.use(bodyParser());
 //app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 //app.use('/', express.static(__dirname + '/public'));
 var server = http.createServer(app).listen(config.port);
@@ -93,6 +93,7 @@ app.post('/send/:sessionId',function(req,res){
 
     var data = req.body;
 
+    console.log("/send");
     console.dir(data);
 
     var m = {
@@ -102,6 +103,8 @@ app.post('/send/:sessionId',function(req,res){
 
     var socket = null;
     var sessionId = req.params.sessionId;
+
+    console.log("session id: "+sessionId);
 
     try{
         socket = io.sockets.socket(sessionId);
