@@ -90,15 +90,26 @@ app.get('/', function (req, res) {
 
 app.post('/send/:sessionId',function(req,res){
 
+    console.log("/send");
 
     var data = req.body;
 
-    console.log("/send");
+    if(data==null){
+        res.send({sent:false,error:"data empty"});
+        return;
+    }
+
     console.dir(data);
+
+    if(data.type != 'checkin'){
+        res.send({sent:false,error:"data is not checkin"});
+        return;
+    }
+
 
     var m = {
         method:"check_in_received",
-        message:"dgsfdhj"
+        message:data
     };
 
     var socket = null;
