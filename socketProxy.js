@@ -6,8 +6,8 @@ var http = require('http');
 var parseApp = require('./parseApp');
 
 var app = express();
-//app.use(express.json());
-app.use(express.bodyParser());
+app.use(express.json());
+//app.use(express.bodyParser());
 //app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 //app.use('/', express.static(__dirname + '/public'));
 var server = http.createServer(app).listen(config.port);
